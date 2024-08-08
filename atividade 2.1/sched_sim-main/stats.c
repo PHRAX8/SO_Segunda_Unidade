@@ -1,5 +1,5 @@
 #include <stdio.h>
-
+#include <stdlib.h>
 #include "queue.h"
 #include "proc.h"
 #include "time.h"
@@ -54,43 +54,50 @@ void accounting(struct queue *q)
 
     // Tempo Médio de Espera
     double TME = 0;
-    
+
     // Tempo Médio Bloqueados
     double TMB = 0;
-    
+
     // Tempo Médio de Turnaround
     double TMT = 0;
 
     // Total de vezes que os processos entraram na fila de aptos
     double num_ready = 0;
-    
+
     // Total de vezes que os processos entraram na fila de bloqueados
     double num_blocked = 0;
 
     printf("\n_________ ESTATISTICAS ________\n\n");
-    
+
     // looping nos processos da fila
-    for(aux = q->head; aux != NULL; aux = aux->next)
+    for (aux = q->head; aux != NULL; aux = aux->next)
     {
         // printproc(aux);
         // printf("\t--------------------\n");
 
         TME += aux->waiting_time;
         num_ready += aux->num_ready;
-        
+
         TMB += aux->blocked_time;
         num_blocked += aux->num_blocked;
 
         TMT += aux->turnaround_time;
     }
 
-    printf("TME: %f\n", (double)TME/(double)num_ready);
-    
-    printf("TMB: %f\n", (double)TMB/(double)num_blocked);
-    
-    printf("TMT: %f\n", (double)TMT/(double)NPROC);
-    
+    printf("TME: ");
+
+    FILE *f = fopen("file.txt", "a");
+    if (f == NULL)
+    {
+        printf("Error opening file!\n");
+        exit(1);
+    }
+    printf("%f\n", (double)TME / (double)num_ready);
+    fprintf(f, "%f\n", (double)TME / (double)num_ready);
+    fclose(f);
+    printf("TMB: %f\n", (double)TMB / (double)num_blocked);
+
+    printf("TMT: %f\n", (double)TMT / (double)NPROC);
+
     printf("_______________________________\n");
-
 }
-

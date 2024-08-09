@@ -266,10 +266,10 @@ int requisicao(int i, int *req)
             aloc[i][j] -= req[j];
             ne[i][j] += req[j];
         }
-        // requisicao negada
-        sem_post(&mutex);
-        return 0;
     }
+    // requisicao negada
+    sem_post(&mutex);
+    return 0;
 }
 
 int seguranca()
@@ -317,10 +317,18 @@ int seguranca()
                 int pode_finalizar = 1;
                 for (j = 0; j < m; j++)
                 {
-                    // verifica se ne[i] e aloc[i] foram alocados corretamente
-                    if (ne[i] == NULL || aloc[i] == NULL)
+                    // verifica se ne[i] foi alocado corretamente
+                    if (ne[i] == NULL)
                     {
-                        perror("Erro: apontador nulo em ne ou aloc");
+                        perror("Erro: apontador nulo em ne");
+                        free(trab);
+                        free(fim);
+                        exit(EXIT_FAILURE);
+                    }
+                    // verifica se aloc[i] foi alocado corretamente
+                    if (aloc[i] == NULL)
+                    {
+                        perror("Erro: apontador nulo em aloc");
                         free(trab);
                         free(fim);
                         exit(EXIT_FAILURE);
